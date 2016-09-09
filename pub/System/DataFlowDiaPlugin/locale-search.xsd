@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="id">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[a-zA-Z][a-zA-Z0-9_]*" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- cross-references to GROUP entities -->
+  <xs:complexType name="groupBackRef">
+    <xs:attribute name="web" type="xs:string" use="required"/>
+    <xs:attribute name="id" type="id" use="required"/>
+    <xs:attribute name="subid" type="id" use="optional"/>
+    <xs:attribute name="defined" type="xs:boolean" use="required"/>
+    <xs:attribute name="deprecated" type="xs:boolean" use="required"/>
+    <xs:attribute name="nodename" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <!-- cross-references to entities other than GROUP -->
+  <xs:complexType name="backRef">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="group" type="groupBackRef"/>
+    </xs:sequence>
+    <xs:attribute name="web" type="xs:string" use="required"/>
+    <xs:attribute name="id" type="id" use="required"/>
+    <xs:attribute name="subid" type="id" use="optional"/>
+    <xs:attribute name="defined" type="xs:boolean" use="required"/>
+    <xs:attribute name="deprecated" type="xs:boolean" use="required"/>
+    <xs:attribute name="nodename" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="connection">
+    <!-- should minOccurs=0 to support optional transports? -->
+    <xs:sequence>
+      <xs:element name="xport" type="backRef"/>
+    </xs:sequence>
+    <xs:attribute name="web" type="xs:string" use="required"/>
+    <xs:attribute name="id" type="id" use="required"/>
+    <xs:attribute name="subid" type="id" use="optional"/>
+    <xs:attribute name="flags" type="xs:string" use="optional"/>
+    <!-- Present for searches, but meaningless - will always be 1 -->
+    <xs:attribute name="defined" type="xs:boolean" use="required"/>
+    <!-- Present for searches, but meaningless - will always be 0 -->
+    <xs:attribute name="deprecated" type="xs:boolean" use="required"/>
+    <xs:attribute name="nodename" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:element name="localecrossref">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="locale">
+          <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+              <xs:choice>
+                <!-- Locales to which this Locale is connected -->
+                <xs:element name="connection" type="connection"/>
+                <!-- Locales that connect to this Locale
+                     Only present for searches, not saved to disk.
+                -->
+                <xs:element name="connectionfrom" type="connection"/>
+                <!-- Processes present in this Locale
+                     Only present for searches, not saved to disk.
+                -->
+                <xs:element name="process" type="backRef"/>
+                <!-- Groups of which this locale is a member -->
+                <xs:element name="group" type="groupBackRef"/>
+              </xs:choice>
+            </xs:sequence>
+            <xs:attribute name="id" type="id" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="web" type="xs:string" use="required"/>
+            <xs:attribute name="topic" type="xs:string" use="required"/>
+            <xs:attribute name="url" type="xs:anyURI" use="optional"/>
+            <!-- true/non-zero if this Locale was defined using a
+                 plug-in macro (and stored in the plug-in's work area).
+                 Only present for searches, not saved to disk.
+            -->
+            <xs:attribute name="defined" type="xs:boolean" use="required"/>
+            <xs:attribute name="deprecated" type="xs:boolean" use="optional"/>
+            <xs:attribute name="flags" type="xs:string" use="optional"/>
+            <xs:attribute name="nodename" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

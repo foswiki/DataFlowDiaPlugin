@@ -1,0 +1,28 @@
+%META:TOPICPARENT{name="DataFlowDiaPlugin"}%
+#VarDFDSEARCH
+---+++ DFDSEARCH{...} -- Perform a low-level [[http://www.w3schools.com/xsl/xpath_intro.asp][XPath]] query on the DataFlowDiaPlugin data
+   * Parameters:
+      | *Parameter* | *Description* | *Default* |
+      | query       | The [[http://www.w3schools.com/xsl/xpath_intro.asp][XPath]] query to perform on the data store (see below). | none, required parameter |
+      | aggregate   | If 0, apply "format" to each matching XML node.  See below. | 1 |
+      | atomempty   | If 1, insert the __empty__ value for individual (atomic) [[http://www.w3schools.com/xsl/xpath_intro.asp][XPath]] subexpressions in __format__ that have no results. | 0 |
+      | separator   | Specifies text to insert between each record of formatted output. | __$n()__ (newline) |
+      | newline     | Text to insert in the output, if __aggregate__ is 1, between aggregated matches. | &lt;br/&gt; |
+      | format      | Specifies the output format using an [[http://www.w3schools.com/xsl/xpath_intro.asp][XPath]] expression. | none |
+      | header      | Specifies text to insert at the top of formatted output. | none |
+      | footer      | Specifies text to insert at the bottom of formatted output. | none |
+      | empty       | Text to insert into formatted output if an [[http://www.w3schools.com/xsl/xpath_intro.asp][XPath]] expression matches nothing. | |
+      | zeroresults | Text to display if there are no matches to the __query__ expression. | No results.$n |
+      | label       | Indicate how wiki links are labeled, with the Entity id, spec, aspec (abbreviated spec) or topic | name |
+
+The __query__ option is where half the utility of this macro resides.  Use this option to specify an [[http://www.w3schools.com/xsl/xpath_intro.asp][XPath]] query that will match XML nodes in the data store that are of interest.  Example: <pre>/datacrossref/data[@deprecated='1' and @web='%WEB%']</pre>
+
+See DataFlowDiaPluginFormatting for details on formatted text output.
+
+Some noteworthy comments:
+   * All entity nodes have an __@id__, __@name__, __@web__, __@topic__ and __@defined__ attribute.
+   * Entities other than __group__ may have __group__ child nodes.
+   * As a work-around for the fact that [[http://www.w3schools.com/xsl/xpath_intro.asp][XPath 1.0]] does not support querying node names, all nodes for searching have a __@nodename__ attribute.
+      * Aside: The nodename() function is supported by XPath 2.0 but libxml2 does not and apparently will not support XPath 2.0.  DataFlowDiaPlugin is developed using a Perl wrapper for libxml2.
+   * Cross references defined in DFD macros are typically accessible to DFDSEARCH using the singular (non-plural) form of the name, e.g. __inputs__ becomes multiple XML nodes called __input__.
+

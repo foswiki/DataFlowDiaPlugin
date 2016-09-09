@@ -1,0 +1,29 @@
+%META:TOPICPARENT{name="DataFlowDiaPlugin"}%
+#VarDFDLOCALE
+---+++ DFDLOCALE{...} -- renders a formatted list of data type translations by process
+   * Parameters:
+      | *Parameter* | *Description*  | *Default* |
+      | id          | Process ID | none, required parameter |
+      | name        | A text description of this locale | value of id |
+      | url         | Specify a URL to be used when clicking on this particular locale in data flow diagrams | Wiki page where this data flow diagram is found |
+      | deprecated  | Indicates whether this locale is still in use and how and when it will be rendered | 0 |
+      | connect     | Connections via transports to other locales | none |
+
+Locales are rendered in diagrams as Graphviz cluster subgraphs.  The subgraph will be labeled using __name__.  The __connect__ parameter is used to determine whether non-multicast data can flow between two locales.
+
+The format of the __connect__ parameter is a comma-separated list of pairs of =locale|transport=.  As an example:
+
+<pre>
+%%NOP%DFDLOCALE{id="here" name="My Place" connect="there|ICMP"}%
+%%NOP%DFDLOCALE{id="there" name="Your Place"}%
+</pre>
+
+In the above example, data utilizing the =ICMP= transport can flow from =here= to =there=, but not from =there= to =here=.
+
+*Note:* There are no defaults for connections __even for the self-locale__.  This means that in the above example, data utilizing the =ICMP= transport cannot be sent from =here= to =here= successfully.  To remedy that, define your locale in the following fashion:
+
+<pre>
+%%NOP%DFDLOCALE{id="elsewhere" name="Another Place" connect="elsewhere|ICMP, there|ICMP, here|ICMP"}%
+</pre>
+
+The above example allows the =elsewhere= locale to send data via =ICMP= to itself, =here= and =there=.

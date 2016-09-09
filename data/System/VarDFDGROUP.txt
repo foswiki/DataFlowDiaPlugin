@@ -1,0 +1,13 @@
+%META:TOPICPARENT{name="DataFlowDiaPlugin"}%
+#VarDFDGROUP
+---+++ DFDGROUP{...} -- defines a group for aggregating entities
+   * Parameters:
+      | *Parameter* | *Description* | *Default* |
+      | id          | ID of the group | none, required parameter |
+      | name        | Name of the group | value of id |
+      | url         | Specify a URL to be used when clicking on this particular group type edge in data flow diagrams | Wiki page where this macro is found |
+      | deprecated  | Indicates whether this group is still in use and how and when it will be rendered | 0 |
+
+This macro does not actually render anything on the wiki page where it is used.  Instead it only provides an anchor to use when linking data flow diagrams to group mechanisms.  The link used in those instances is the value in __url__ (which is the location of the [[VarDFDGROUP][DFDGROUP]] macro if not specified).
+
+The primary use of GROUPs is in the organizion of Data Types.  Generally speaking, the creationg of groups is unnecessary.  Groups are not rendered at all, but are intended to be used in [[VarDFDSEARCH][DFDSEARCH]] and [[VarDFDCONNECT][DFDCONNECT]] queries, by ID.

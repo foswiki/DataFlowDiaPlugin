@@ -1,0 +1,13 @@
+%META:TOPICPARENT{name="DataFlowDiaPlugin"}%
+#VarDFDTRANSPORT
+---+++ DFDTRANSPORT{...} -- specifies a target location for data flow diagram transport links
+   * Parameters:
+      | *Parameter* | *Description* | *Default* |
+      | id          | ID of the transport type | none, required parameter |
+      | name        | Name of the transport type | value of id |
+      | url         | Specify a URL to be used when clicking on this particular transport type edge in data flow diagrams | Wiki page where this macro is found |
+      | deprecated  | Indicates whether this transport is still in use and how and when it will be rendered | 0 |
+
+This macro does not actually render anything on the wiki page where it is used.  Instead it only provides an anchor to use when linking data flow diagrams to transport mechanisms.  The link used in those instances is the value in __url__ (which is the location of the DFDTRANSPORT macro if not specified).
+
+Diagram edges representing this transport will be labeled using __name__, which if not specified is the value of __id__.

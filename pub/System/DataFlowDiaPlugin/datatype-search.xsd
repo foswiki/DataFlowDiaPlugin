@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="id">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[a-zA-Z][a-zA-Z0-9_]*" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- cross-references to GROUP entities -->
+  <xs:complexType name="groupBackRef">
+    <xs:attribute name="web" type="xs:string" use="required"/>
+    <xs:attribute name="id" type="id" use="required"/>
+    <xs:attribute name="subid" type="id" use="optional"/>
+    <xs:attribute name="defined" type="xs:boolean" use="required"/>
+    <xs:attribute name="deprecated" type="xs:boolean" use="required"/>
+    <xs:attribute name="nodename" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <!-- cross-references to entities other than GROUP -->
+  <xs:complexType name="backRef">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="group" type="groupBackRef"/>
+    </xs:sequence>
+    <xs:attribute name="web" type="xs:string" use="required"/>
+    <xs:attribute name="id" type="id" use="required"/>
+    <xs:attribute name="subid" type="id" use="optional"/>
+    <xs:attribute name="defined" type="xs:boolean" use="required"/>
+    <xs:attribute name="deprecated" type="xs:boolean" use="required"/>
+    <xs:attribute name="nodename" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="procRef">
+    <xs:sequence>
+      <xs:element name="group" type="groupBackRef" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="xport" type="backRef" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="web" type="xs:string" use="required"/>
+    <xs:attribute name="id" type="id" use="required"/>
+    <xs:attribute name="subid" type="id" use="optional"/>
+    <xs:attribute name="flags" type="xs:string" use="optional"/>
+    <xs:attribute name="defined" type="xs:boolean" use="required"/>
+    <xs:attribute name="deprecated" type="xs:boolean" use="required"/>
+    <xs:attribute name="nodename" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:element name="datacrossref">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="data">
+          <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+              <xs:choice>
+                <!-- Standard transport used for this DataType.
+                     *NOTE:*
+                     There should only ever be one xport element, but
+                     I can't be bothered to figre out how to restrict
+                     xport to no more than one instance while allowing
+                     any number of the other elements. -->
+                <xs:element name="xport" type="backRef"/>
+                <!-- Process that translates another DataType TO this one -->
+                <xs:element name="to" type="backRef"/>
+                <!-- Process that translates another DataType FROM this one -->
+                <xs:element name="from" type="backRef"/>
+                <!-- Process that produces this DataType -->
+                <xs:element name="producer" type="procRef"/>
+                <!-- Process that consumes this DataType -->
+                <xs:element name="consumer" type="procRef"/>
+                <!-- Process that produces AND consumes (what it
+                     produces) this DataType
+                -->
+                <xs:element name="looper" type="procRef"/>
+                <!-- Groups of which this data type is a member -->
+                <xs:element name="group" type="groupBackRef"/>
+              </xs:choice>
+            </xs:sequence>
+            <xs:attribute name="id" type="id" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="web" type="xs:string" use="required"/>
+            <xs:attribute name="topic" type="xs:string" use="required"/>
+            <xs:attribute name="url" type="xs:anyURI" use="optional"/>
+            <!-- true/non-zero if this Transport was defined using a
+                 plug-in macro (and stored in the plug-in's work area).
+                 Only present for searches, not saved to disk.
+            -->
+            <xs:attribute name="defined" type="xs:boolean" use="required"/>
+            <xs:attribute name="deprecated" type="xs:boolean" use="optional"/>
+            <xs:attribute name="flags" type="xs:string" use="optional"/>
+            <xs:attribute name="nodename" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

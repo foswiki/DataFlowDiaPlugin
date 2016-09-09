@@ -1,0 +1,21 @@
+%META:TOPICPARENT{name="DataFlowDiaPlugin"}%
+---+!! Data Flow Diagram Examples
+
+%TOC%
+
+---++ Data Transport Example
+
+__You type:__
+<verbatim>
+%DFDTRANSPORT{id="DataFlowDiaPluginTransport" name="transportEX"}%
+</verbatim>
+
+<table><tr><td valign="top" width="50%">
+__You get: (simulated)__ %BR%
+*NOTHING* but an HTML anchor.
+</td><td valign="top" width="50%">
+__You get: (if installed)__ %BR%
+%DFDTRANSPORT{id="DataFlowDiaPluginTransport" name="transportEX"}%
+</td></tr></table>
+
+This page only serves to provide a link to the sample transport.  Refer to the diagram in DataFlowDiaPluginExamples.  The link is in the table cell below the "if installed" column header.

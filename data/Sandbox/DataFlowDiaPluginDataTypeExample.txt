@@ -1,0 +1,38 @@
+%META:TOPICPARENT{name="DataFlowDiaPlugin"}%
+---+!! Data Flow Diagram Examples
+
+%TOC%
+
+---++ Data Type Example 1
+
+__You type:__
+<verbatim>
+%DFDDATA{id="DataFlowDiaPluginExampleData01"}%
+</verbatim>
+
+__You get: (simulated)__ %BR%
+<img src="%ATTACHURLPATH%/DataFlowDiaPluginDataDiaEx1.png" alt="DataFlowDiaPluginDataDiaEx1.png" />
+
+__You get: (if installed)__ %BR%
+%DFDDATA{id="DataFlowDiaPluginExampleData01"}%
+
+In this example, you should see diagram links generated for the example applications and data type, and the objects in the diagram will have clickable links that lead to the appropriate documentation page (where the application or data type was defined).
+
+---++ Data Type Example 2
+
+__You type:__
+<verbatim>
+%DFDDATA{id="DataFlowDiaPluginExampleData02" name="dataEX" library="DataFlowDiaPluginLibrary" xport="DataFlowDiaPluginTransport"}%
+</verbatim>
+
+__You get: (simulated)__ %BR%
+<img src="%ATTACHURLPATH%/DataFlowDiaPluginDataDiaEx2.png" alt="DataFlowDiaPluginDataDiaEx2.png" />
+
+__You get: (if installed)__ %BR%
+%DFDDATA{id="DataFlowDiaPluginExampleData02" name="dataEX" library="DataFlowDiaPluginLibrary" xport="DataFlowDiaPluginTransport"}%
+
+In this example, you should see diagram links generated for the example applications and data type, and the objects in the diagram will have clickable links that lead to the appropriate documentation page (where the application or data type was defined).  Additionally, diagrams using this data type, e.g. the one in DataFlowDiaPluginExamples, will annotate the data type defined above as well as the links to and from this data type.
+
+
+%META:FILEATTACHMENT{name="DataFlowDiaPluginDataDiaEx1.png" attachment="DataFlowDiaPluginDataDiaEx1.png" attr="h" comment="DataFlowDiaPlugin example data flow diagram" date="1417819886" path="DataFlowDiaPluginDataDiaEx1.png" size="4655" user="JohnKnutson" version="1"}%
+%META:FILEATTACHMENT{name="DataFlowDiaPluginDataDiaEx2.png" attachment="DataFlowDiaPluginDataDiaEx2.png" attr="h" comment="DataFlowDiaPlugin example data flow diagram" date="1417819934" path="DataFlowDiaPluginDataDiaEx2.png" size="5527" user="JohnKnutson" version="1"}%

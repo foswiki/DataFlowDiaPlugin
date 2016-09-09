@@ -1,0 +1,28 @@
+%META:TOPICPARENT{name="DataFlowDiaPlugin"}%
+---+!! Data Flow Diagram Examples
+
+%TOC%
+
+---++ Data Type / Transport
+
+In order to demonstrate page linking between diagrams, the other examples can be found here:
+   * DataFlowDiaPluginDataTypeExample
+   * DataFlowDiaPluginTransportExample
+
+---++ Data Flow
+
+__You type:__
+<verbatim>
+%DFDAPP{id="DataFlowDiaPluginExampleApp01" name="example1" inputs="DataFlowDiaPluginExampleData01 DataFlowDiaPluginExampleData02" outputs="DataFlowDiaPluginExampleData03" inouts="DataFlowDiaPluginExampleData04"}%
+</verbatim>
+
+__You get: (simulated)__ %BR%
+<img src="%ATTACHURLPATH%/DataFlowDiaPluginAppDiaEx.png" alt="DataFlowDiaPluginAppDiaEx.png" />
+
+__You get: (if installed)__ %BR%
+%DFDAPP{id="DataFlowDiaPluginExampleApp01" name="example1" inputs="DataFlowDiaPluginExampleData01 DataFlowDiaPluginExampleData02" outputs="DataFlowDiaPluginExampleData03" inouts="DataFlowDiaPluginExampleData04"}%
+     
+Note that the "installed" image will not be identical to the simulated image until the DataFlowDiaPluginDataTypeExample and DataFlowDiaPluginTransportExample pages have been loaded at least once since the plugin's installation (or last database clear).  Additionally, the simulated image does not provide image-mapped links.
+
+
+%META:FILEATTACHMENT{name="DataFlowDiaPluginAppDiaEx.png" attachment="DataFlowDiaPluginAppDiaEx.png" attr="h" comment="DataFlowDiaPlugin example application data flow diagram" date="1417819886" path="DataFlowDiaPluginAppDiaEx.png" size="12717" user="JohnKnutson" version="1"}%

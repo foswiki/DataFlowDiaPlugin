@@ -1,0 +1,44 @@
+%META:TOPICPARENT{name="DataFlowDiaPlugin"}%
+#VarDFDCONNECT
+---+++ DFDCONNECT{...} -- renders an IPC diagram or list
+
+The DFDCONNECT macro renders either a graph of the interconnections between entities (data type or process), or a formatted text (or HTML or wiki mark-up) representation of that graph.
+
+   * Parameters:
+      | *Parameter* | *Description* | *Default* |
+      | id          | Entity ID | none, required parameter |
+      | type        | Graph type, see below | none, required parameter |
+      | dir         | See below | 3 (both) |
+      | level       | The depth of the diagram, i.e. how many links away from __id__ will be included. | 0 |
+      | datanodes   | If non-zero, render data types as nodes in graphs | 0 (do not render data types as nodes) |
+      | printself   | If 0, the proc indicated by __id__ will *not* be listed in the output.  Valid with __format__ only. | Given proc is listed in output. |
+      | nolocales   | For graphs, processes are clustered by locale.  If this parameter is non-zero, the nodes are not clustered | 0 |
+      | aggregate   | If 0, apply "format" to each matching XML node.  See below. | 1 |
+      | atomempty   | If 1, insert the __empty__ value for individual (atomic) [[http://www.w3schools.com/xsl/xpath_intro.asp][XPath]] subexpressions in __format__ that have no results. | 0 |
+      | hidedeprecated | If 1, deprecated entities will not be rendered | 0 |
+      | separator   | Specifies text to insert between each record of formatted output. | __$n()__ (newline) |
+      | newline     | Text to insert in the output, if __aggregate__ is 1, between aggregated matches. | &lt;br/&gt; |
+      | empty       | Text to insert into formatted output if an [[http://www.w3schools.com/xsl/xpath_intro.asp][XPath]] expression matches nothing. | |
+      | zeroresults | Text to display if there are no matches to the __query__ expression. | No results.$n |
+      | label       | Indicate how wiki links are labeled, with the Entity id, spec, aspec (abbreviated spec) or topic | name |
+      | format      | Specifies the output format using an [[http://www.w3schools.com/xsl/xpath_intro.asp][XPath]] expression. | none |
+      | header      | Specifies text to insert at the top of formatted output. | none |
+      | footer      | Specifies text to insert at the bottom of formatted output. | none |
+      | locales     | Only render entities within in the given list of comma-separated locale IDs | all locales are included |
+      | exclocales  | Do not render entities withing the given list of comma-separated locale IDs | no locales are excluded |
+
+Output is generated using data from [[VarDFDDATA][DFDDATA]] macros and [[VarDFDPROC][DFDPROC]] macros.
+
+*Graph Types*
+<dl>
+  <dt>proc<dt>
+  <dd>Render a connection diagram between Process and Data Type entities, using a Process entity as a starting point.  May have multiple starting points, depending on Locale associations and macro parameters.</dd>
+  <dt>data</dt>
+  <dd>Render a connection diagram between Process and Data Type entities, using a Data Type entity as a starting point.  Aside from the obvious, such a diagram may also have multiple "starting points" due to the fact that multiple Processes may utilize the requested Data Type.  The only Data Type entities appearing in the graph will be those matching the specified ID.</dd>
+  <dt>group</dt>
+  <dd>Render a connection diagram between Process and Data Type entities, where only Data Types that are members of the specified group are rendered, along with the Process entities that utilize those Data Types.</dd>
+  <dt>translation</dt>
+  <dd>Similar to a "data" graph type; additionally takes into account the translation between Data Types as specified in Process definitions (via [[VarDFDPROC][DFDPROC]] macros).</dd>
+</dl>
+
+See DataFlowDiaPluginFormatting for details on formatted text output.

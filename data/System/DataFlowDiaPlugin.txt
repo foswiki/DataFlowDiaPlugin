@@ -1,0 +1,142 @@
+%META:TOPICPARENT{name="Plugins"}%
+---+ Data Flow Diagram Plugin
+<!--
+One line description, required for extensions repository catalog.
+   * Set SHORTDESCRIPTION = Plugin containing macros for generating data flow diagrams
+-->
+
+%SHORTDESCRIPTION%
+
+%TOC%
+
+---++ Purpose
+
+The purpose of this plugin is to provide a means, when writing system/software design documentation, for understanding the interactions between processes without requiring a priori knowledge.
+
+The plugin works by using macros to define individual components (entities) that make up the system, and how those components themselves interact with nearest-neighbors.  The job of determining who those neighbors actually are is left up to the internals of the plug-in using said definitions.
+
+---++ Definitions
+
+<dl>
+   <dt>Data Type</dt>
+   <dd>A named collection of information.  From a software design perspective, this might be a class or struct.</dd>
+   <dt>Group</dt>
+   <dd>An aggregation of multiple Data Types.  From a software design perspective, this might be a library.</dd>
+   <dt>Process</dt>
+   <dd>Anything that produces or consumes instances of Data Types.  From a software design perspective, this might be an application.</dd>
+   <dt>Translation</dt>
+   <dd>An indication that a Process ingests one Data Type and turns it into another Data Type before providing the new data to other Processes.</dd>
+   <dt>Locale</dt>
+   <dd>A grouping of processes.  This may be a physical location, a host, a component within an embedded system; anything where processes might be grouped together.  A process may have multiple locales or none at all.  Locale definitions allow for associating a readable locale name with a locale ID used in macros.</dd>
+   <dt>Transport</dt>
+   <dd>A named mechanism for transferring instances of Data Types between Processes.</dd>
+   <dt>deprecated</dt>
+   <dd>An attribute for design elements indicating that the element has been removed from the implementation.</dd>
+   <dt>Orphan</dt>
+   <dd>Any design element whose documentation is incomplete or non-existent.</dd>
+</dl>
+
+The following diagram indicates the relationships between the entities used by this plugin:
+
+<img src="%ATTACHURLPATH%/objects.png" alt="DataFlowDiaPlugin objects UML diagram" />
+
+---++ Plugin Preferences
+
+%X% *Note: This plugin does not read settings from this topic.*  Copy the settings below to your SitePreferences topic and remove the # if changes are required.  These settings can be placed in SitePreferences, WebPreferences, User topics, or any individual topic.  Refer to [[%SYSTEMWEB%.PreferenceSettings][preference settings]] for more information.
+
+%X% *Note: This plugin utilizes DirectedGraphPlugin, therefore its preferences will affect the appearance of graph output for this plugin.*
+
+<verbatim>
+   * #Set DATAFLOWDIAPLUGIN_DEBUG = 0
+   * #Set DATAFLOWDIAPLUGIN_DOTTAGOPTS = inline="svg" map="1" vectorformats="dot"
+   * #Set DATAFLOWDIAPLUGIN_GRAPHDEFAULTS = rankdir="LR",labelloc="t"
+   * #Set DATAFLOWDIAPLUGIN_EDGEDEFAULTS = fontsize=8
+   * #Set DATAFLOWDIAPLUGIN_NODEDEFAULTS = style=filled,fontsize=9,fillcolor=white
+   * #Set DATAFLOWDIAPLUGIN_PROCDEFAULTS = shape="ellipse"
+   * #Set DATAFLOWDIAPLUGIN_DEPPROCDEFAULTS = shape="ellipse",fillcolor=red
+   * #Set DATAFLOWDIAPLUGIN_DATADEFAULTS = shape="note"
+   * #Set DATAFLOWDIAPLUGIN_DEPDATADEFAULTS = shape="note",fillcolor=red
+   * #Set DATAFLOWDIAPLUGIN_DEPMARKUP = del
+</verbatim>
+
+---+++ Description of the settings
+
+Changes to the settings marked %X% will cause changes to the file hash. This will result in the attached graphics being regenerated on the next view.
+
+*All settings are prefixed with =DATAFLOWDIAPLUGIN_= as shown above*  _The prefix is ommited from this table to improve layout._
+
+|    *Setting*    |                 *Default*                | *Description* |
+| DEBUG           | 0                                        | Produce debugging output in Foswiki debug.log |
+| DOTTAGOPTS      | inline="svg" map="1" vectorformats="dot" | %X% Parameters specified in the &lt;dot&gt;&lt;/dot&gt; tag (refer to DirectedGraphPlugin for more information). |
+| GRAPHDEFAULTS   | rankdir="LR",labelloc="t"                | %X% Graphviz graph default settings |
+| EDGEDEFAULTS    | fontsize=8                               | %X% Graphviz edge default settings |
+| NODEDEFAULTS    | style=filled,fontsize=9,fillcolor=white  | %X% Graphviz node default settings |
+| PROCDEFAULTS    | shape="ellipse"                          | %X% Graphviz node settings for non-deprecated processes |
+| DEPPROCDEFAULTS | shape="ellipse",fillcolor=red            | %X% Graphviz node settings for deprecated processes |
+| DATADEFAULTS    | shape="note"                             | %X% Graphviz node settings for non-deprecated data types |
+| DEPDATADEFAULTS | shape="note",fillcolor=red               | %X% Graphviz node settings for deprecated data types |
+| DEPMARKUP       | del                                      | HTML tag used for deprecated entities when rendered as links |
+
+---++ Macros
+
+The data flow diagram generation macros defined by this plugin build a database of cross reference information.  This is done using the __id__ parameter of the macro.  The __id__ parameter is used for linking between diagrams.
+
+%INCLUDE{VarDFDPROC}%
+%INCLUDE{VarDFDDATA}%
+%INCLUDE{VarDFDTRANSPORT}%
+%INCLUDE{VarDFDLOCALE}%
+%INCLUDE{VarDFDGROUP}%
+%INCLUDE{VarDFDSEARCH}%
+%INCLUDE{VarDFDCONNECT}%
+
+
+---++ Examples
+Examples can be found in Sandbox.DataFlowDiaPluginExamples.
+
+Extensive sanity checks can be found in Sandbox.PluginTestDataFlowDiaPlugin.
+
+---++ Plugin Installation Instructions
+You do not need to install anything in the browser to use this extension. The following instructions are for the administrator who installs the extension on the server.
+
+---+++ Installation
+Open configure, and open the "Extensions" section. Use "Find More Extensions" to get a list of available extensions. Select "Install".
+
+If you have any problems, or if the extension isn't available in =configure=, then you can still install manually from the command-line. See http://foswiki.org/Support/ManuallyInstallingExtensions for more help.
+
+---+++ Dependencies
+| *Package* | *Description* |
+| DirectedGraphPlugin | Allows embedding dynamic diagrams in wiki documents |
+| XML::LibXML | Perl module for reading and saving XML files |
+
+---++ Known Bugs / Issues
+
+   * Macro parameters are not sanitized.
+
+---++ TODO
+
+---++ Plugin Info
+
+|  Change&nbsp;History: | <!-- versions below in reverse order -->&nbsp; |
+|  06 Oct 2015 | 2.0.1 <ol><li>Remove entities from store when removed from topic</li><li>Don't store inherited definitions in XML</li><li>Fix various transport issues</li></ol> |
+|  28 Sep 2015 | 2.0.0 Rewrite to include web discrimination and XPath queries |
+|  03 Mar 2015 | 1.1.0 <ol><li>Add customization preferences</li><li>Add data type translation tracking</li><li>Change from registered macros to commonTagsHandler to allow nested macros</li></ol> |
+|  12 Feb 2015 | 1.0.1 Initial release |
+
+
+
+%META:FORM{name="PackageForm"}%
+%META:FIELD{name="Author" title="Author" value="Foswiki:Main.JohnKnutson"}%
+%META:FIELD{name="Version" title="Version" value="v2.0.1"}%
+%META:FIELD{name="Release" title="Release" value="2.0.1"}%
+%META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/DataFlowDiaPlugin"}%
+%META:FIELD{name="Copyright" title="Copyright" value="&copy; 2015, Applied Research Laboratories, the University of Texas at Austin"}%
+%META:FIELD{name="License" title="License" value="[[%25ATTACHURLPATH%25/COPYING.txt][GPLv3]]"}%
+%META:FIELD{name="Home" title="Home" value="http://foswiki.org/Extensions/DataFlowDiaPlugin"}%
+%META:FIELD{name="Support" title="Support" value="http://foswiki.org/Support/DataFlowDiaPlugin"}%
+%META:FILEATTACHMENT{name="COPYING.txt" attachment="COPYING.txt" attr="" comment="GNU General Public License v3" date="1417819886" path="COPYING.txt" size="35147" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="datatype-search.xsd" attachment="datatype-search.xsd" attr="" comment="XML Schema for DFDDATA definition searches" date="1417819886" path="datatype-search.xsd" size="4617" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="group-search.xsd" attachment="group-search.xsd" attr="" comment="XML Schema for DFDDATA definition searches" date="1417819886" path="group-search.xsd" size="2893" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="locale-search.xsd" attachment="locale-search.xsd" attr="" comment="XML Schema for DFDDATA definition searches" date="1417819886" path="locale-search.xsd" size="4130" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="process-search.xsd" attachment="process-search.xsd" attr="" comment="XML Schema for DFDDATA definition searches" date="1417819886" path="process-search.xsd" size="4178" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="transport-search.xsd" attachment="transport-search.xsd" attr="" comment="XML Schema for DFDDATA definition searches" date="1417819886" path="transport-search.xsd" size="3290" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="objects.png" attachment="objects.png" attr="" comment="Entity Relation Object Diagram" date="1417819886" path="objects.png" size="15290" user="ProjectContributor" version="1"}%

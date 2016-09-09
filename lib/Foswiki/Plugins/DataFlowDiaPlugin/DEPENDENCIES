@@ -1,0 +1,2 @@
+XML::LibXML,>=0,cpan,Required
+Foswiki::Plugins::DirectedGraphPlugin,>=1.13,perl,Required.

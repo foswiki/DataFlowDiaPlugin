@@ -1,0 +1,33 @@
+%META:TOPICPARENT{name="DataFlowDiaPlugin"}%
+The __header__, __footer__ and __separator__ text may only include plain text and the formatting tokens described in System.FormatTokens.  The macro-specific tokens listed below only apply to the __format__ text.
+
+The __format__ text may be a mix of wiki text, HTML and [[http://www.w3schools.com/xsl/xpath_intro.asp][XPath]] - basically anything you want to have rendered using the process data.  [[http://www.w3schools.com/xsl/xpath_intro.asp][XPath]] expressions in __format__ must be surrounded with tilde markers, e.g. <pre>~@web~</pre>
+
+The __aggregate__ option is used to determine how matches will be formatted in the event that a single match to the __query__ [[http://www.w3schools.com/xsl/xpath_intro.asp][XPath]] expression leads to multiple matches with the __format__ [[http://www.w3schools.com/xsl/xpath_intro.asp][XPath]] query expression.  As an example, you might do something like this: <blockquote><code>%DF<nop>DSEARCH{"/proccrossref/proc[@id='procex' @web='%WEB%']" format="   * ~*[(name()='input' or name()='output' or name()='inout')]~"}%</code></blockquote>
+Might yield something like:
+   * FakeDataType1 <br/> FakeDataType2 <br/> FakeDataType3
+   * FakeDataType4 <br/> FakeDataType5
+   * FakeDataType6
+
+When this: <blockquote><code>%DF<nop>DSEARCH{"/proccrossref/proc[@id='procex' @web='%WEB%']" format="   * ~*[(name()='input' or name()='output' or name()='inout')]~" aggregate="0"}%</code></blockquote>
+Might yield something like:
+   * FakeDataType1
+   * FakeDataType2
+   * FakeDataType3
+   * FakeDataType4
+   * FakeDataType5
+   * FakeDataType6
+
+*Note:* The above expressions have not been tested and may not work, they're just being used as a visual examples of how the results might look.
+
+*Note:* If you find yourself needing to disable the aggregate setting, it may be that a better [[http://www.w3schools.com/xsl/xpath_intro.asp][XPath]] expression is worth using.  In the case of above, you might instead use: <blockquote><code>%DF<nop>DSEARCH{"/proccrossref/proc[@id='procex' @web='%WEB%']/*[(name()='input' or name()='output' or name()='inout')]" format="   * ~self::node()~" aggregate="0"}%</code></blockquote>
+
+The __label__ value is used when rendering wiki links.  This occurs automatically for XML nodes that are entity definitions or cross references.  That is, anything with the attributes "id" and "web".  The following label types are supported:
+| *Label* | *Result* |
+| name    | The name of the entity as defined by the appropriate DFD macro (often the same as ID) |
+| id      | The web-unique identifier of the entity as defined by the appropriate DFD macro (web itself is NOT included) |
+| spec    | The complete text string that might be used to refer to the entity in DFD macros |
+| aspec   | An abbreviated macro spec, where DEFAULT values, self-same webs and empty portions of the spec are hidden |
+| topic   | The topic where the macro defining the entity resides |
+
+The XML Schema Descriptions for the data types are attached to the DataFlowDiaPlugin topic.  Note that the schema description represents an in-memory representation that includes redundant information that is useful for such queries, but are not stored on disk.

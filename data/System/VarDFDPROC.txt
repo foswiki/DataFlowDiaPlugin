@@ -1,0 +1,33 @@
+%META:TOPICPARENT{name="DataFlowDiaPlugin"}%
+#VarDFDPROC
+---+++ DFDPROC{...} -- renders a data flow diagram for processes
+   * Parameters:
+      | *Parameter* | *Description* | *Default* |
+      | id          | Process ID | none, required parameter |
+      | name        | Process name | value of id |
+      | url         | Specify a URL to be used when clicking on this particular process node in data flow diagrams | Wiki page where this data flow diagram is found |
+      | deprecated  | Indicates whether this process is still in use and how and when it will be rendered | 0 |
+      | inxport     | Data transport to use for inputs unless otherwise specified in the inputs list | Transport defined for the data type |
+      | outxport    | Data transport to use for outputs unless otherwise specified in the outputs list | Transport defined for the data type |
+      | inoutxport  | Data transport to use for in/outs unless otherwise specified in the inouts list | Transport defined for the data type |
+      | inputs      | List of data type names taken as inputs to proc | none |
+      | outputs     | List of data type names produced as outputs to proc | none |
+      | inouts      | List of data type names produced as outputs to proc, where those same produced messages are also taken as inputs (e.g. for state recovery) | none |
+      | locales     | List of locales where this process is used | none |
+      | translation | List of data translations performed by this process (see below) | none |
+
+The values of __inputs__, __outputs__ and __inouts__ should be a comma-delimited list of data type identifiers.  If linking from the data type nodes in the diagram to a wiki or web page is desired, the values should be used in an __id__ parameter of an DFDDATA macro on the wiki.  If no link is available for a given data type ID, the ID text as specified in the list is used and no linking is generated.
+
+An example:
+<verbatim>%DFDPROC{id="cc" inputs="code#file object"}%</verbatim>
+
+The values of __locales__ should be a comma-delimited list of locale identifiers.
+
+The values of __translation__ should be a comma-delimited list of from/to pairs of data type identifiers.  The pair is separated by a &gt; as in the following example:
+<verbatim>%DFDDATA{id="ex1"}%
+%DFDDATA{id="ex2"}%
+%DFDPROC{id="proc" inputs="ex1" outputs="ex2" translation="ex1>ex2"}%</verbatim>
+
+Diagram edges representing this transport will be labeled using __name__, which if not specified is the value of __id__.
+
+If __deprecated__ is non-zero, graphs will render the process according to [[DataFlowDiaPlugin][DATAFLOWDIAPLUGIN_DEPPROCDEFAULTS]].  Tables will render the process <del>[[DataFlowDiaPlugin][thus]]</del>.
