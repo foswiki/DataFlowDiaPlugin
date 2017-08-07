@@ -141,11 +141,13 @@ sub FAIL {
 }
 
 
-# @return the beginning portion of a DirectedGraphPlugin graph
+# @return the beginning portion of a GraphvizPlugin graph
 sub genDotStart {
     my ($file, $label) = @_;
     my $rv =
-        "<dot file=\"$file\" "
+# GraphvizPlugin doesn't have an equivalent to DirectedGraphPlugin's file opt
+#        "<dot file=\"$file\" "
+	"<graphviz "
         . $Foswiki::Plugins::DataFlowDiaPlugin::dotTagDefault
         . ">\n"
 	. "digraph G {\n"
@@ -162,9 +164,9 @@ sub genDotStart {
 }
 
 
-# @return the ending portion of a DirectedGraphPlugin graph
+# @return the ending portion of a GraphvizPlugin graph
 sub genDotEnd {
-    return "}\n</dot>\n";
+    return "}\n</graphviz>\n";
 }
 
 
