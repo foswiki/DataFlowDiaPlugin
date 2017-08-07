@@ -355,19 +355,33 @@ sub hashConByXport {
         $dir,
         $macroAttrs) = @_;
     my $myLTcnct;
+    my $debugID = $self->{'id'};
+    _debugFuncStart("hashConByXport($debugID, $xportMacroSpec, locXportHash, $dir, macroAttrs)");
     # Use the hash of connected Locale Entity objects appropriate for
     # the connection direction.
     if ($dir == $DIR_BACK) {
+        _debugWrite("$debugID getting connectedFrom");
         $myLTcnct = $self->{'connectedFrom'};
     } else {
+        _debugWrite("$debugID getting connectedTo");
         $myLTcnct = $self->{'connectedTo'};
     }
+    if (defined($myLTcnct)) {
+        _debugWrite("$debugID myLTcnct keys: " . join(" ", keys %{ $myLTcnct }));
+    } else {
+        _debugWrite("$debugID myLTcnct is undefined");
+    }
     my %matchedLocales = filterLocales($myLTcnct, $macroAttrs);
+    _debugWrite("matchedLocales keys: " . join(" ", keys %matchedLocales));
     foreach my $localeKey (keys %matchedLocales) {
         my $lt = $matchedLocales{$localeKey};
         my $ltXportMacroSpec = $lt->xportMacroSpec();
+        _debugWrite("localeKey=$localeKey  xportMacroSpec=$xportMacroSpec  ltXportMacroSpec=$ltXportMacroSpec");
         if ($ltXportMacroSpec eq $xportMacroSpec) {
+            _debugWrite("macro specs match");
             $locXportHash->{$localeKey} = $matchedLocales{$localeKey};
+        } else {
+            _debugWrite("macro specs DO NOT match");
         }
     }
     if ($dir == $DIR_BOTH) {
@@ -390,6 +404,7 @@ sub hashConByXport {
             $self->docMgr());
         $locXportHash->{$defLocMacroSpec} = $defLT;
     }
+    _debugFuncEnd("hashConByXport($debugID, $xportMacroSpec, locXportHash, $dir, macroAttrs)");
 }
 
 

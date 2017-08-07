@@ -188,12 +188,16 @@ sub matchLocales {
     my ($self,
         $localeHash) = @_;
     my $procLocales = $self->processEntity()->locales();
-    # _debugWrite("ProcessTransport::matchLocales()");
-    # _debugWrite("MINE:");
-    # _debugWrite($_) foreach (keys %{ $procLocales });
-    # _debugWrite("THEIRS:");
-    # _debugWrite($_) foreach (keys %{ $localeHash });
-    # _debugWrite("  ---");
+    _debugFuncStart("ProcessTransport::matchLocales");
+    _debugWrite("MINE:");
+    if (defined($procLocales)) {
+        _debugWrite($_) foreach (keys %{ $procLocales });
+    }
+    _debugWrite("THEIRS:");
+    if (defined($localeHash)) {
+        _debugWrite($_) foreach (keys %{ $localeHash });
+    }
+    _debugWrite("  ---");
     my $matchingLocales = {};
     foreach my $mykey (keys %{ $procLocales }) {
         foreach my $yourkey (keys %{ $localeHash }) {
@@ -208,6 +212,7 @@ sub matchLocales {
             undef $ples;
         }
     }
+    _debugFuncEnd("ProcessTransport::matchLocales");
     return $matchingLocales;
 }
 

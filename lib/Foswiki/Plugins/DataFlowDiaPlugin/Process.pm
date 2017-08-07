@@ -553,13 +553,16 @@ sub connect {
 #    if ($graphCollection->hasProcess($self)) {
 #        return;
 #    }
+    _debugFuncStart("Process::connect");
     if ($macroAttrs->{'hidedeprecated'} && $self->isDeprecated()) {
+        _debugFuncEnd("Process::connect (1)");
         return;
     }
+    my $mylocales = (defined($locales) ? $locales : $self->locales());
     my %matchingLocales =
         Foswiki::Plugins::DataFlowDiaPlugin::Locale::filterLocales(
-            $locales || $self->locales(),
-            $macroAttrs);
+            $mylocales, $macroAttrs);
+    _debugWrite("matching locales (post filter): " . join(" ", keys %matchingLocales));
 
     $graphCollection->addProcess($_, $matchingLocales{$_}, $self)
         foreach (keys %matchingLocales);
@@ -567,6 +570,7 @@ sub connect {
 
     # check our termination condition
     if ($macroAttrs->{'level'} <= 0) {
+        _debugFuncEnd("Process::connect (2)");
         return;
     }
 
@@ -603,6 +607,7 @@ sub connect {
     }
     if ($macroAttrs->{'dir'} & $DIR_BACK) {
         $macroAttrsCopy{'dir'} = $DIR_BACK;
+        _debugWrite("matching locales (pre back): " . join(" ", keys %matchingLocales));
         $self->connectData(
             $DIR_BACK,
             \%macroAttrsCopy,
@@ -631,6 +636,7 @@ sub connect {
     }
     if ($macroAttrs->{'dir'} & $DIR_FWD) {
         $macroAttrsCopy{'dir'} = $DIR_FWD;
+        _debugWrite("matching locales (pre fwd): " . join(" ", keys %matchingLocales));
         $self->connectData(
             $DIR_FWD,
             \%macroAttrsCopy,
@@ -638,6 +644,7 @@ sub connect {
             $graphCollection,
             $specHashCopyRef);
     }
+    _debugFuncEnd("Process::connect (3)");
 }
 
 
@@ -670,14 +677,34 @@ sub connectData {
     # Iterate through all inputs, outputs or inouts depending on
     # $connectDir, i.e. iterate through all data types associated with
     # this processes.
-    # if ($self->id() eq "someprocessid") {
-    #     _debugFuncStart("connectData(someprocessid, $connectDir, ...)");
-    #     _debugWrite("keys for $ioParamName:");
-    #     _debugWrite("    $_") foreach (keys %{ $self->{$ioParamName} });
-    #     _debugWrite("keys for locales:");
-    #     _debugWrite("    $_") foreach (keys %{ $locales });
-    # }
+    my $debugID = $self->{'id'};
+    _debugFuncStart("connectData($debugID, $connectDir, ...)");
+    _debugWrite("keys for $ioParamName:");
+    if (defined($self->{$ioParamName})) {
+        _debugWrite("    $_") foreach (keys %{ $self->{$ioParamName} });
+    } else {
+        _debugWrite("    undef");
+    }
+    _debugWrite("keys for locales:");
+    if (defined($locales)) {
+        _debugWrite("    $_") foreach (keys %{ $locales });
+    } else {
+        _debugWrite("    undef");
+    }
+    # don't implicitly turn an undef value into an empty hash ref
+    if (defined($self->{$ioParamName})) {
+        _debugWrite("self $ioParamName is defined");
+    } else {
+        _debugWrite("self $ioParamName is NOT defined");
+    }
+    if (!defined($self->{$ioParamName}))
+    {
+        _debugFuncEnd("connectData($debugID, $connectDir, ...)");
+        return;
+    }
     foreach my $iodtKey (keys %{ $self->{$ioParamName} }) {
+        _debugWrite("iodtKey = $iodtKey");
+        _debugWrite("ioParamName = $ioParamName");
         # $dt is the DataTransport reference IN THIS PROCESS
         # $dataEntity is the DataType Entity of the DataTransport
         # $dataES is the EntitySpec for the DataType in $dt
@@ -687,7 +714,14 @@ sub connectData {
 
         # Skip DataType entities that are not part of the requested
         # group, if there was one.
+        _debugWrite("matchHash pre");
+        if (defined($specHash)) {
+            _debugWrite("specHash is defined");
+        } else {
+            _debugWrite("specHash is NOT defined");
+        }
         next if (!$dataES->matchHash($specHash, 1));
+        _debugWrite("matchHash post");
 
         # Get a hash of *potentially* connected Process Entity
         # objects.  These are just the objects that the DataType knows
@@ -695,10 +729,12 @@ sub connectData {
         my $procXports = $dataEntity->getConProc(
             $connectDir, $dt->entitySpec());
 
-        # if ($self->id() eq "someprocessid") {
-        #     _debugWrite("keys for procXports:");
-        #     _debugWrite("    $_") foreach (keys %{ $procXports });
-        # }
+        _debugWrite("keys for procXports:");
+        if (defined($procXports)) {
+            _debugWrite("    $_") foreach (keys %{ $procXports });
+        } else {
+            _debugWrite("    undef");
+        }
 
         # we have our data entity in $dataEntity
         #   our processes using $dataEntity in $procXports
@@ -708,6 +744,10 @@ sub connectData {
         # or not at all if datanodes=false
 
         # go through each of the matching locales for THIS process
+
+        # don't implicitly turn an undef value into an empty hash ref
+        _debugWrite("locales is undefined") unless (defined($locales));
+        next unless (defined($locales));
         foreach my $lockey (keys %{ $locales }) {
             my $myLocEntity = $locales->{$lockey};
             my %locCons = ();
@@ -717,10 +757,8 @@ sub connectData {
                 $connectDir,
                 $macroAttrs);
 
-            # if ($self->id() eq "someprocessid") {
-            #     _debugWrite("keys for locCons ($lockey):");
-            #     _debugWrite("    $_") foreach (keys %locCons);
-            # }
+            _debugWrite("keys for locCons ($lockey):");
+            _debugWrite("    $_") foreach (keys %locCons);
 
             # %locCons now contains a hash of LocaleTransport
             # references to which the locale referred to by
@@ -745,10 +783,9 @@ sub connectData {
                 my $cnctProc = $procXports->{$ptkey}->processEntity();
                 my $cnctDT = $cnctProc->reverseDataXport(
                     $dt->entitySpec(), $connectDir);
-                # if ($self->id() eq "someprocessid") {
-                #     _debugWrite("keys for targetLocales:");
-                #     _debugWrite("    $_") foreach (keys %{ $targetLocales });
-                # }
+                _debugWrite("ptkey=$ptkey");
+                _debugWrite("keys for targetLocales:");
+                _debugWrite("    $_") foreach (keys %{ $targetLocales });
                 foreach my $tgtlockey (keys %{ $targetLocales }) {
                     # restrict the next connect() call to just this locale
                     my %tmpLocHash =
@@ -776,13 +813,11 @@ sub connectData {
                     # store matched entities for queries
                     $self->storeMatch($dt, $myLocEntity);
                     $cnctProc->storeMatch($cnctDT,$targetLocales->{$tgtlockey});
-                }
-            }
-        }
-    }
-    # if ($self->id() eq "someprocessid") {
-    #     _debugFuncEnd("connectData(someprocessid, $connectDir, ...)");
-    # }
+                } # foreach my $tgtlockey
+            } # foreach my $ptkey
+        } # foreach my $lockey
+    } # foreach my $iodtKey
+    _debugFuncEnd("connectData($debugID, $connectDir, ...)");
 }
 
 
@@ -844,6 +879,8 @@ sub reverseDataXport {
         $dtEntitySpec,
         $connectDir) = @_;
     my $paramName = dir2ReverseParamName($connectDir);
+    # don't implicitly turn an undef value into an empty hash ref
+    return unless defined($self->{$paramName});
     # first, try direct match
     if (defined($self->{$paramName}->{ $dtEntitySpec->macroSpec() })) {
         return $self->{$paramName}->{ $dtEntitySpec->macroSpec() };
@@ -909,6 +946,8 @@ sub defnGraph {
         $self);
 
     foreach my $dataIOParam ('inputs', 'outputs', 'inouts') {
+        # don't implicitly turn an undef value into an empty hash ref
+        next unless (defined($self->{$dataIOParam}));
         foreach my $dtkey (sort keys %{ $self->{$dataIOParam} }) {
             $graphCollection->addDataLeaf(
                 $localeEntity,

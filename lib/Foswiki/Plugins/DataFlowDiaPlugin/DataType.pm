@@ -301,6 +301,7 @@ sub getConProc {
         $dir,
         $dtEntitySpec) = @_;
 
+    _debugFuncStart("getConProc");
     my $rv = {};
     my $procHash;
     if ($dir == $DIR_BACK) {
@@ -313,12 +314,20 @@ sub getConProc {
         $procHash = $self->{'loopers'};
     }
     # Match all ProcessTransport definitions from $procHash with $dtEntitySpec.
-    foreach my $key (keys %{ $procHash }) {
-        if ($procHash->{$key}->matchDataTransport($dtEntitySpec)) {
-            $rv->{$key} = $procHash->{$key};
+    if (defined($procHash)) {
+        _debugWrite("procHash is defined");
+        foreach my $key (keys %{ $procHash }) {
+            _debugWrite("key=$key");
+            if ($procHash->{$key}->matchDataTransport($dtEntitySpec)) {
+                _debugWrite("adding process with matched transport");
+                $rv->{$key} = $procHash->{$key};
+            }
         }
+    } else {
+        _debugWrite("procHash is NOT defined");
     }
     undef $dtEntitySpec;
+    _debugFuncEnd("getConProc");
     return $rv;
 }
 
