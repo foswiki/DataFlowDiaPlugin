@@ -67,7 +67,7 @@ Changes to the settings marked %X% will cause changes to the file hash. This wil
 
 |    *Setting*    |                 *Default*                | *Description* |
 | DEBUG           | 0                                        | Produce debugging output in Foswiki debug.log |
-| DOTTAGOPTS      | inline="svg" map="1" vectorformats="dot" | %X% Parameters specified in the &lt;dot&gt;&lt;/dot&gt; tag (refer to DirectedGraphPlugin for more information). |
+| DOTTAGOPTS      | inline="svg" map="1" vectorformats="dot" | %X% Parameters specified in the &lt;graphviz&gt;&lt;/graphviz&gt; tag (refer to DirectedGraphPlugin for more information). |
 | GRAPHDEFAULTS   | rankdir="LR",labelloc="t"                | %X% Graphviz graph default settings |
 | EDGEDEFAULTS    | fontsize=8                               | %X% Graphviz edge default settings |
 | NODEDEFAULTS    | style=filled,fontsize=9,fillcolor=white  | %X% Graphviz node default settings |
@@ -117,6 +117,7 @@ If you have any problems, or if the extension isn't available in =configure=, th
 ---++ Plugin Info
 
 |  Change&nbsp;History: | <!-- versions below in reverse order -->&nbsp; |
+|  07 Aug 2017 | 2.0.2 <ol><li>Use GraphvizPlugin instead of DirectedGraphPlugin</li></ol> |
 |  06 Oct 2015 | 2.0.1 <ol><li>Remove entities from store when removed from topic</li><li>Don't store inherited definitions in XML</li><li>Fix various transport issues</li></ol> |
 |  28 Sep 2015 | 2.0.0 Rewrite to include web discrimination and XPath queries |
 |  03 Mar 2015 | 1.1.0 <ol><li>Add customization preferences</li><li>Add data type translation tracking</li><li>Change from registered macros to commonTagsHandler to allow nested macros</li></ol> |
@@ -126,8 +127,8 @@ If you have any problems, or if the extension isn't available in =configure=, th
 
 %META:FORM{name="PackageForm"}%
 %META:FIELD{name="Author" title="Author" value="Foswiki:Main.JohnKnutson"}%
-%META:FIELD{name="Version" title="Version" value="v2.0.1"}%
-%META:FIELD{name="Release" title="Release" value="2.0.1"}%
+%META:FIELD{name="Version" title="Version" value="v2.0.2"}%
+%META:FIELD{name="Release" title="Release" value="2.0.2"}%
 %META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/DataFlowDiaPlugin"}%
 %META:FIELD{name="Copyright" title="Copyright" value="&copy; 2015, Applied Research Laboratories, the University of Texas at Austin"}%
 %META:FIELD{name="License" title="License" value="[[%25ATTACHURLPATH%25/COPYING.txt][GPLv3]]"}%
